@@ -27,7 +27,7 @@ export class CreateQuestionUseCase {
       content,
     });
 
-    this.questionsRepository.create(question);
+    await this.questionsRepository.create(question);
 
     return { question };
   }
