@@ -14,7 +14,7 @@ describe('Edit answer', () => {
     sut = new EditAnswerUseCase(inMemoryAnswersRepository);
   });
 
-  it('should be able to edit a answer', async () => {
+  it('should be able to edit an answer', async () => {
     const newAnswer = makeAnswer(
       { authorId: new UniqueEntityID('author-1') },
       new UniqueEntityID('answer-1'),
@@ -29,7 +29,6 @@ describe('Edit answer', () => {
     });
 
     expect(inMemoryAnswersRepository.items[0]).toMatchObject({
-      title: 'Pergunta teste',
       content: 'Conteúdo teste',
     });
   });

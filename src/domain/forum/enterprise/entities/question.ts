@@ -24,6 +24,12 @@ export class Question extends Entity<QuestionProps> {
     return this.props.bestAnswerId;
   }
 
+  set bestAnswerId(bestAnswerId: UniqueEntityID | undefined) {
+    this.props.bestAnswerId = bestAnswerId;
+
+    this.touch();
+  }
+
   get title() {
     return this.props.title;
   }
