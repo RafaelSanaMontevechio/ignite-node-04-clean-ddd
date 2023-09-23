@@ -34,8 +34,6 @@ describe('Fetch Question Answers', () => {
       page: 1,
     });
 
-    console.log(inMemoryAnswersRepository.items);
-
     expect(answers).toHaveLength(3);
   });
 
