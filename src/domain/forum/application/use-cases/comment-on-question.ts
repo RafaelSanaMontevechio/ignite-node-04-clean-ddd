@@ -10,7 +10,9 @@ interface CommentOnQuestionUseCaseRequest {
   content: string;
 }
 
-interface CommentOnQuestionUseCaseResponse {}
+interface CommentOnQuestionUseCaseResponse {
+  questionComment: QuestionComment;
+}
 
 export class CommentOnQuestionUseCase {
   constructor(
