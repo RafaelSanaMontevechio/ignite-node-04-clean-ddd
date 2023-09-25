@@ -12,7 +12,7 @@ interface FetchQuestionCommentsUseCaseResponse {
 
 export class FetchQuestionCommentsUseCase {
   constructor(
-    private questionsCommentsRepositoryRepository: QuestionsCommentsRepository,
+    private questionsCommentsRepository: QuestionsCommentsRepository,
   ) {}
 
   async execute({
@@ -20,10 +20,9 @@ export class FetchQuestionCommentsUseCase {
     page,
   }: FetchQuestionCommentsUseCaseRequest): Promise<FetchQuestionCommentsUseCaseResponse> {
     const questionComments =
-      await this.questionsCommentsRepositoryRepository.findManyByQuestionId(
-        questionId,
-        { page },
-      );
+      await this.questionsCommentsRepository.findManyByQuestionId(questionId, {
+        page,
+      });
 
     return { questionComments };
   }
