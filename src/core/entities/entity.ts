@@ -13,4 +13,16 @@ export abstract class Entity<Props> {
     this.props = props;
     this._id = id ?? new UniqueEntityID(id);
   }
+
+  public equals(entity: Entity<any>) {
+    if (entity === this) {
+      return true;
+    }
+
+    if (entity._id === this._id) {
+      return true;
+    }
+
+    return false;
+  }
 }
