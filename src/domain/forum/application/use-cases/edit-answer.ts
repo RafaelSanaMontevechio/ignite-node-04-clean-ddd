@@ -6,11 +6,16 @@ import { AnswersRepository } from '../repositories/answers-repository';
 
 import { NotAllowedError } from './errors/not-allowed-error';
 import { ResourceNotFoundError } from './errors/resource-not-found-error';
+import { AnswerAttachmentList } from '../../enterprise/entities/answer-attachment-list';
+import { AnswerAttachment } from '../../enterprise/entities/answer-attachment';
+import { UniqueEntityID } from '@/core/entities/unique-entity-id';
+import { AnswerAttachmentsRepository } from '../repositories/answer-attachments-repository';
 
 interface EditAnswerUseCaseRequest {
   authorId: string;
   answerId: string;
   content: string;
+  attachmentsIds: string[];
 }
 
 type EditAnswerUseCaseResponse = Either<
@@ -21,12 +26,16 @@ type EditAnswerUseCaseResponse = Either<
 >;
 
 export class EditAnswerUseCase {
-  constructor(private answersRepository: AnswersRepository) {}
+  constructor(
+    private answersRepository: AnswersRepository,
+    private answerAttachmentsRepository: AnswerAttachmentsRepository,
+  ) {}
 
   async execute({
     authorId,
     answerId,
     content,
+    attachmentsIds,
   }: EditAnswerUseCaseRequest): Promise<EditAnswerUseCaseResponse> {
     const answer = await this.answersRepository.findById(answerId);
 
@@ -38,6 +47,23 @@ export class EditAnswerUseCase {
       return left(new NotAllowedError());
     }
 
+    const currentAnswerAttachments =
+      await this.answerAttachmentsRepository.findManyByAnswerId(answerId);
+
+    const currentAnswerAttachmentList = new AnswerAttachmentList(
+      currentAnswerAttachments,
+    );
+
+    const newAnswerAttachments = attachmentsIds.map((attachmentId) => {
+      return AnswerAttachment.create({
+        attachmentId: new UniqueEntityID(attachmentId),
+        answerId: answer.id,
+      });
+    });
+
+    currentAnswerAttachmentList.update(newAnswerAttachments);
+
+    answer.attachments = currentAnswerAttachmentList;
     answer.content = content;
 
     await this.answersRepository.save(answer);
